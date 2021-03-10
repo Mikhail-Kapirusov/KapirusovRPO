@@ -45,7 +45,18 @@ set_target_properties(
 target_include_directories(
         native-lib PUBLIC
         ~/AndroidStudioProjects/libs/spdlog/spdlog/include
+        ~/AndroidStudioProjects/libs/mbedtls/mbedtls/include
 )
+add_library(mbedcrypto SHARED IMPORTED)
+set_target_properties(
+        mbedcrypto PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/../cmakeLibs/${ANDROID_ABI}/libmbedcrypto.so
+)
+
+configure_file(
+        /Users/mihailkapirusov/AndroidStudioProjects/libs/mbedtls/build/${ANDROID_ABI}/library/libmbedcrypto.so
+        ${CMAKE_CURRENT_SOURCE_DIR}/../cmakeLibs/${ANDROID_ABI}/libmbedcrypto.so
+        COPYONLY)
+
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
@@ -53,6 +64,7 @@ target_include_directories(
 target_link_libraries( # Specifies the target library.
                        native-lib
                        spdlog
+                       mbedcrypto
                        # Links the target library to the log library
                        # included in the NDK.
                        ${log-lib} )
